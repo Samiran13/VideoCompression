@@ -10,19 +10,20 @@ apt install -y --no-install-recommends $DEPS
 
 # 2) Create Python virtual environment
 cd /workspace/VideoCompression
-mkdir -p /test_videos /output_videos /results
+mkdir test_videos output_videos
 python3 -m venv /workspace/venv
 source /workspace/venv/bin/activate
 pip install --upgrade pip
 
 # 3) Install project requirements if available
-if [ -f requirements.txt ]; then
-  echo "Installing requirements..."
-  pip install -r requirements.txt
-else
-  echo "No requirements.txt found."
-  pip install numpy pandas opencv-python ffmpeg-python
-fi
+pip install numpy pandas opencv-python ffmpeg-python
+# if [ -f requirements.txt ]; then
+#   echo "Installing requirements..."
+#   pip install -r requirements.txt
+# else
+#   echo "No requirements.txt found."
+#   pip install numpy pandas opencv-python ffmpeg-python
+# fi
 
 # 5) Verify config.ini exists
 if [ -f config.ini ]; then
@@ -32,10 +33,6 @@ else
 fi
 
 # 6) Export environment for runtime convenience
-cat > /workspace/runpod_env.sh <<EOE
-source /workspace/venv/bin/activate
-cd /workspace/VideoCompression
-EOE
 chmod +x /workspace/runpod_env.sh
 
 echo "=== DONE: setup_runpod.sh ==="
