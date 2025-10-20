@@ -60,8 +60,8 @@ echo "VMAF models installed to /usr/share/vmaf/model"
 # -------- 5) Project setup --------
 cd /workspace/VideoCompression
 mkdir -p test_videos output_videos
-python3 -m venv /workspace/venv
-source /workspace/venv/bin/activate
+python3 -m venv /workspace/venv1
+source /workspace/venv1/bin/activate
 pip install --upgrade pip
 pip install numpy pandas opencv-python ffmpeg-python
 
@@ -74,7 +74,7 @@ fi
 cat >/workspace/VideoCompression/runpod_env.sh <<'ENV'
 #!/usr/bin/env bash
 # Source this before running the project
-source /workspace/venv/bin/activate
+source /workspace/venv1/bin/activate
 export PATH=/opt/ffmpeg/bin:$PATH
 export PYTHONUNBUFFERED=1
 export VMAF_MODEL="/usr/share/vmaf/model/vmaf_v0.6.1.json"

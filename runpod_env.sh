@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Source this before running the project
-source /workspace/venv/bin/activate
+source /workspace/venv1/bin/activate
 export PATH=/opt/ffmpeg/bin:$PATH
 export PYTHONUNBUFFERED=1
 export VMAF_MODEL="/usr/share/vmaf/model/vmaf_v0.6.1.json"
