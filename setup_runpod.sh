@@ -33,7 +33,7 @@ else
 fi
 
 # 6) Export environment for runtime convenience
-chmod +x /workspace/runpod_env.sh
+chmod +x /workspace/VideoCompression/runpod_env.sh
 
 echo "=== DONE: setup_runpod.sh ==="
-echo "➡️ Use 'source /workspace/runpod_env.sh' before running the project."
+echo "➡️ Use 'source /workspace/VideoCompression/runpod_env.sh' before running the project."
