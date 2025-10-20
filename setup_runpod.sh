@@ -8,7 +8,7 @@ require_cmd() { command -v "$1" >/dev/null 2>&1 || { echo "Missing $1"; exit 1; 
 # -------- 1) System deps --------
 export DEBIAN_FRONTEND=noninteractive
 apt update -y
-DEPS="git python3 python3-venv python3-pip wget unzip build-essential pkg-config yasm nasm meson ninja-build libx264-dev libx265-dev libnuma-dev libvpx-dev libaom-dev libfreetype6-dev libfribidi-dev libass-dev libmp3lame-dev libopus-dev ca-certificates curl"
+DEPS="git python3 python3-venv python3-pip wget unzip build-essential pkg-config yasm nasm meson ninja-build libx264-dev libx265-dev libnuma-dev libvpx-dev libaom-dev libfreetype6-dev libfribidi-dev libass-dev libmp3lame-dev libopus-dev ca-certificates curl xxd"
 echo "Installing: $DEPS"
 apt install -y --no-install-recommends $DEPS
 
@@ -23,9 +23,9 @@ cd vmaf/libvmaf
 
 # ✅ KEY CHANGE: enable built-in models so libvmaf works without model=... in ffmpeg
 if [ -d build ]; then
-  meson setup --reconfigure build --buildtype release -Dbuiltin_models=true
+  meson setup --reconfigure build --buildtype release -Dbuilt_in_models=true
 else
-  meson setup build --buildtype release -Dbuiltin_models=true
+  meson setup build --buildtype release -Dbuilt_in_models=true
 fi
 ninja -C build
 ninja -C build install
