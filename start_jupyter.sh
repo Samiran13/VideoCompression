@@ -29,7 +29,7 @@ pkill -f "jupyter-notebook" >/dev/null 2>&1 || true
 # ----------------------------------------------------
 # 5️⃣  Start one version (uncomment whichever you prefer)
 
-## --- Option A: JupyterLab ---
+# ## --- Option A: JupyterLab ---
 # nohup jupyter lab \
 #   --ip=0.0.0.0 \
 #   --port=$JUPYTER_PORT \
@@ -40,16 +40,17 @@ pkill -f "jupyter-notebook" >/dev/null 2>&1 || true
 #   --ServerApp.websocket_ping_timeout=60000 \
 #   > "$LOG_FILE" 2>&1 &
 
-## --- Option B: Classic Notebook ---
-nohup jupyter notebook \
-  --ip=0.0.0.0 \
-  --port=$JUPYTER_PORT \
-  --no-browser \
-  --allow-root \
-  --NotebookApp.token='' \
-  --NotebookApp.websocket_ping_interval=60000 \
-  --NotebookApp.websocket_ping_timeout=60000 \
-  > "$LOG_FILE" 2>&1 &
+# ## --- Option B: Classic Notebook ---
+# nohup jupyter notebook \
+#   --ip=0.0.0.0 \
+#   --port=$JUPYTER_PORT \
+#   --no-browser \
+#   --allow-root \
+#   --NotebookApp.token='' \
+#   --NotebookApp.websocket_ping_interval=60000 \
+#   --NotebookApp.websocket_ping_timeout=60000 \
+#   > "$LOG_FILE" 2>&1 &
+jupyter notebook --ip=0.0.0.0 --port=8889 --no-browser --NotebookApp.token='' --allow-root
 
 # ----------------------------------------------------
 # 6️⃣  Final message
