@@ -5,29 +5,33 @@
 # Or make executable:
 #   chmod +x ~/start_jupyter.sh && ./start_jupyter.sh
 
-# ----------------------------------------------------
-# 1️⃣  Activate virtual environment
-source /workspace/venv1/bin/activate
+# --------------------------------------------------------
+# Configuration
+JUP_ENV="/workspace/venv-jupyter"
+REQ_FILE="/workspace/req.txt"
+JUPYTER_PORT=8889
+LOG_FILE=/workspace/jupyter.log
 
+# --------------------------------------------------------
+# 1️⃣ Create venv if missing
+if [ ! -d "$JUP_ENV" ]; then
+  echo "🧩 Creating new Jupyter virtual environment at $JUP_ENV ..."
+  python3 -m venv "$JUP_ENV"
+  echo "✅ Virtual environment created."
+else
+  echo "🔄 Using existing Jupyter environment: $JUP_ENV"
+fi
+
+# --------------------------------------------------------
+# 2️⃣ Activate the environment
+source "$JUP_ENV/bin/activate"
 # ----------------------------------------------------
 # 2️⃣  Ensure core packages are installed
+pip install --quiet --upgrade pip setuptools wheel
 pip install --quiet jupyterlab notebook ipykernel jupyter-archive
 
 # ----------------------------------------------------
-# 3️⃣  Register the venv kernel (if not already present)
-python -m ipykernel install --user --name venv1 --display-name "Python (venv1)"
-
-# ----------------------------------------------------
-# 4️⃣  Configuration
-JUPYTER_PORT=8889
-LOG_FILE=~/jupyter.log
-
-# # Stop any existing Jupyter processes (optional)
-# pkill -f "jupyter-lab" >/dev/null 2>&1 || true
-# pkill -f "jupyter-notebook" >/dev/null 2>&1 || true
-
-# ----------------------------------------------------
-# 5️⃣  Start one version (uncomment whichever you prefer)
+# Start one version (uncomment whichever you prefer)
 
 # ## --- Option A: JupyterLab ---
 # nohup jupyter lab \
@@ -50,10 +54,43 @@ LOG_FILE=~/jupyter.log
 #   --NotebookApp.websocket_ping_interval=60000 \
 #   --NotebookApp.websocket_ping_timeout=60000 \
 #   > "$LOG_FILE" 2>&1 &
+
+# --------------------------------------------------------
+## --------------------------------------------------------
+# Patch conflicting pins and install dependencies
+if [[ -f "$REQ_FILE" ]]; then
+  echo "🩹 Patching known dependency conflicts ..."
+  TMP_REQ="/tmp/req.jupyter.patched.txt"
+  rm -f "$TMP_REQ"
+  cp "$REQ_FILE" "$TMP_REQ"
+
+  # 1) Remove ANY existing pins that can conflict (idempotent)
+  sed -i -E '/^protobuf([<=>!]=|==|<|>| )/d' "$TMP_REQ"
+  sed -i -E '/^grpcio(-status|-health-checking)?([<=>!]=|==|<|>| )/d' "$TMP_REQ"
+  sed -i -E '/^click([<=>!]=|==|<|>| )/d' "$TMP_REQ"
+  sed -i -E '/^markdown-mermaid-to-images([<=>!]=|==|<|>| )/d' "$TMP_REQ"
+
+  # 2) Add pins compatible with TF 2.19.1 (protobuf < 6)
+  {
+    echo 'protobuf>=5.26.1,<6'
+    echo 'grpcio==1.71.2'
+    echo 'grpcio-status==1.71.2'
+    echo 'grpcio-health-checking==1.71.2'
+    echo 'click>=8.1.3'   # keep Flask 3.1.x happy
+  } >> "$TMP_REQ"
+
+  # (Optional) Show exactly what will be used
+  echo "🔎 Effective pins:"
+  grep -nE '^(protobuf|grpcio|click|markdown-mermaid-to-images)' "$TMP_REQ" || true
+
+  echo "📦 Installing Notebook dependencies from patched requirements..."
+  pip install --upgrade -r "$TMP_REQ"
+else
+  echo "⚠️  No requirements file found at $REQ_FILE — skipping dependency install."
+fi
+
+
+
+
 jupyter notebook --ip=0.0.0.0 --port=8889 --no-browser --NotebookApp.token='' --allow-root
 
-# ----------------------------------------------------
-# 6️⃣  Final message
-echo "✅ Jupyter server started on port $JUPYTER_PORT"
-echo "📜 Logs: tail -f $LOG_FILE"
-echo "🌐 Access via RunPod UI → 'App running on...' → port $JUPYTER_PORT"
