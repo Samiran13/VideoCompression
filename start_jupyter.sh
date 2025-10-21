@@ -22,9 +22,9 @@ python -m ipykernel install --user --name venv1 --display-name "Python (venv1)"
 JUPYTER_PORT=8889
 LOG_FILE=~/jupyter.log
 
-# Stop any existing Jupyter processes (optional)
-pkill -f "jupyter-lab" >/dev/null 2>&1 || true
-pkill -f "jupyter-notebook" >/dev/null 2>&1 || true
+# # Stop any existing Jupyter processes (optional)
+# pkill -f "jupyter-lab" >/dev/null 2>&1 || true
+# pkill -f "jupyter-notebook" >/dev/null 2>&1 || true
 
 # ----------------------------------------------------
 # 5️⃣  Start one version (uncomment whichever you prefer)
