@@ -3,6 +3,7 @@
 # Core video processing
 opencv-python>=4.5.0
 numpy>=1.21.0
+pandas
 ffmpeg-python>=0.2.0
 
 # JSON handling and utilities
